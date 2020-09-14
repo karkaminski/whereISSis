@@ -1,6 +1,7 @@
-package pl.karkaminski.whereissis;
+package pl.karkaminski.whereissis.viewmodel;
 
 import android.app.Application;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,14 @@ public class IssNowViewModel extends AndroidViewModel {
         return issNowResponseJSON;
     }
 
-    public void checkLocation(){
-        issNowRepository.setLocation();
+    public void startRefreshing() {
+            Handler handler = new Handler();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    issNowRepository.setLocation();
+                    handler.postDelayed(this, 1000);
+                }
+            });
     }
 }

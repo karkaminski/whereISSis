@@ -1,9 +1,10 @@
 package pl.karkaminski.whereissis.model;
 
-import android.app.Application;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import retrofit2.Call;
@@ -34,25 +35,23 @@ public class IssNowRepository {
         setLocation();
     }
 
-
-    public MutableLiveData<IssNowResponseJSON> getIssNowResponseJSON(){
+    public MutableLiveData<IssNowResponseJSON> getIssNowResponseJSON() {
         return issNowResponseJSON;
     }
-
 
     public void setLocation() {
         Call<IssNowResponseJSON> call = issNowAPI.getIssNow();
         call.enqueue(new Callback<IssNowResponseJSON>() {
             @Override
             public void onResponse(Call<IssNowResponseJSON> call, Response<IssNowResponseJSON> response) {
-                Log.i(TAG, "onResponse: " + response.body().getIssPosition().getLatitude());
+                Log.i(TAG, "onResponse: LAT=" + response.body().getIssPosition().getLatitude() +
+                        " LON=" + response.body().getIssPosition().getLongitude());
                 issNowResponseJSON.postValue(response.body());
-
             }
 
             @Override
             public void onFailure(Call<IssNowResponseJSON> call, Throwable t) {
-                Log.i(TAG, "onFailure: ");
+                Log.i(TAG, "onFailure: " + t.getMessage());
             }
         });
     }
